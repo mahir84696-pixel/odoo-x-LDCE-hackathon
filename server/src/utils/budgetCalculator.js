@@ -19,7 +19,7 @@ function calculateBudget(expenses = {}, tripBudget = 0) {
 function activitySpend(stops = []) {
   return stops.reduce((sum, stop) => {
     const stopActs = (stop.activities || []).reduce((s, a) => s + Number(a.cost || 0), 0);
-    return sum + stopActs + Number(stop.budget || 0);
+    return sum + stopActs;
   }, 0);
 }
 
