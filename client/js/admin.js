@@ -6,21 +6,33 @@ let activeTab = 'tabTrends';
 let userFilterRole = 'all';
 
 (async function () {
+  const loading = document.getElementById('adminLoading');
+  const errorBox = document.getElementById('adminError');
+  const content = document.getElementById('adminContent');
+  const showError = (title, message) => {
+    if (loading) loading.style.display = 'none';
+    if (content) content.style.display = 'none';
+    if (errorBox) errorBox.style.display = 'block';
+    document.getElementById('adminErrorTitle').textContent = title;
+    document.getElementById('adminErrorMessage').textContent = message;
+  };
   if (!UI.requireAuth()) return;
   try {
     const session = await API.get('/auth/me');
     setCurrentUser(session.user);
   } catch (err) {
-    UI.toast(err.message, 'error');
-    return (location.href = 'login.html');
+    API.setToken(null);
+    setCurrentUser(null);
+    return showError('Sign-in required', 'Your session expired. Sign in with admin@globetrotter.com to open the admin panel.');
   }
   await loadNavbar('admin.html');
 
   if (currentUser()?.role !== 'admin') {
-    UI.toast('Admin privileges required', 'error');
-    return (location.href = 'dashboard.html');
+    return showError('Administrator access required', 'This account is not an administrator. Sign in with the seeded admin account or ask an administrator to promote it.');
   }
 
+  if (loading) loading.style.display = 'none';
+  if (content) content.style.display = 'block';
   await loadAdminStats();
   setupTabs();
   setupModals();
@@ -42,7 +54,7 @@ async function loadAdminStats() {
     renderActs();
     renderCharts();
   } catch (err) {
-    UI.toast(err.message, 'error');
+    showError('Could not load admin data', err.message || 'Start the server and try again.');
   }
 }
 
