@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel · GlobeTrotter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .admin-stats-summary-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+    .admin-chart-box {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .admin-chart-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .admin-table th {
+      background: var(--bg);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1.5px solid var(--line);
+    }
+    .admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+    .admin-table tr:hover td {
+      background: rgba(47,107,93,0.03);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <main class="page-content">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:10px">
+        <div>
+          <span class="tag adventure">Screen 12/13 · Admin Control</span>
+          <h2 style="font-size:2.2rem;margin-top:4px">Admin Panel</h2>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" id="openAddCityModal">+ Add City</button>
+          <button class="btn btn-primary" id="openAddActModal">+ Add Activity</button>
+        </div>
+      </div>
+
+      <!-- Search & Filter Toolbar matching wireframe -->
+      <div class="toolbar">
+        <input class="toolbar-search" id="searchInput" type="search" placeholder="Search users, cities, or activities…">
+        <button type="button" class="btn btn-chip" id="adminGroupBtn">Group by Role/Region</button>
+        <button type="button" class="btn btn-chip" id="adminFilterBtn">Filter Status</button>
+        <button type="button" class="btn btn-chip" id="adminSortBtn">Sort by Name/Date</button>
+      </div>
+
+      <!-- Top KPI Metric Cards -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon trips">👤</div>
+          <div>
+            <div class="kpi-value" id="kUsers">0</div>
+            <div class="kpi-label">Registered Users</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon cities">✈</div>
+          <div>
+            <div class="kpi-value" id="kTrips">0</div>
+            <div class="kpi-label">Total Trips Created</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon acts">🏙</div>
+          <div>
+            <div class="kpi-value" id="kCities">0</div>
+            <div class="kpi-label">Cities in Catalog</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon budget">◎</div>
+          <div>
+            <div class="kpi-value" id="kActs">0</div>
+            <div class="kpi-label">Verified Activities</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Admin Sub-tabs matching wireframe -->
+      <div class="admin-tabs">
+        <button class="btn btn-chip active" data-tab="tabTrends">📈 User Trends & Analytics</button>
+        <button class="btn btn-chip" data-tab="tabUsers">👥 Manage Users</button>
+        <button class="btn btn-chip" data-tab="tabCities">🏙 Popular Cities</button>
+        <button class="btn btn-chip" data-tab="tabActs">◎ Popular Activities</button>
+      </div>
+
+      <!-- Tab 1: User Trends and Analytics (Charts and Graphs matching wireframe) -->
+      <section class="admin-panel active" id="tabTrends">
+        <div class="grid grid-2" style="margin-bottom:1.5rem">
+          <div class="admin-chart-box">
+            <div class="admin-chart-title">
+              <span>📈 Trip Creations Trend (Monthly)</span>
+              <span class="tag sightseeing">Growth Line</span>
+            </div>
+            <div style="height:280px;position:relative">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+
+          <div class="admin-chart-box">
+            <div class="admin-chart-title">
+              <span>🥧 Activity Categories Breakdown</span>
+              <span class="tag food">Distribution Pie</span>
+            </div>
+            <div style="height:280px;position:relative;display:flex;justify-content:center">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-chart-box">
+          <div class="admin-chart-title">
+            <span>📊 Top Visited Destinations in Itineraries</span>
+            <span class="tag adventure">Demand Bar Chart</span>
+          </div>
+          <div style="height:280px;position:relative">
+            <canvas id="citiesBarChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: Manage Users -->
+      <section class="admin-panel card" id="tabUsers">
+        <h3 style="font-size:1.3rem;margin-bottom:1.2rem">User Accounts in SQLite</h3>
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User Details</th>
+                <th>Email Address</th>
+                <th>Location</th>
+                <th>Role</th>
+                <th>Created</th>
+                <th style="text-align:right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab 3: Popular Cities -->
+      <section class="admin-panel card" id="tabCities">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <h3 style="font-size:1.3rem">City Catalog & Visit Rankings</h3>
+        </div>
+        <div class="grid grid-3" id="popularCities"></div>
+      </section>
+
+      <!-- Tab 4: Popular Activities -->
+      <section class="admin-panel card" id="tabActs">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <h3 style="font-size:1.3rem">Verified Activity Demand</h3>
+        </div>
+        <div class="grid grid-3" id="popularActs"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Add City Modal -->
+  <div class="modal-overlay" id="addCityModal">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+        <h3>Add New City to SQLite</h3>
+        <button class="btn btn-sm btn-ghost" id="closeCityModal">✕</button>
+      </div>
+      <form id="addCityForm">
+        <div class="grid grid-2">
+          <div class="form-group"><label class="form-label">City Name</label><input class="form-input" id="newCityName" required></div>
+          <div class="form-group"><label class="form-label">Country</label><input class="form-input" id="newCityCountry" required></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="form-group"><label class="form-label">Region</label><input class="form-input" id="newCityRegion" placeholder="Asia, Europe, etc."></div>
+          <div class="form-group"><label class="form-label">Cost Index (INR/day)</label><input class="form-input" id="newCityCost" type="number" value="50"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="newCityImage" placeholder="https://images.unsplash.com/..."></div>
+        <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="newCityDesc" rows="2"></textarea></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" id="cancelCityBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save City</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Activity Modal -->
+  <div class="modal-overlay" id="addActModal">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+        <h3>Add New Activity to SQLite</h3>
+        <button class="btn btn-sm btn-ghost" id="closeActModal">✕</button>
+      </div>
+      <form id="addActForm">
+        <div class="form-group"><label class="form-label">Destination City</label><select class="form-select" id="newActCitySelect" required></select></div>
+        <div class="form-group"><label class="form-label">Activity Name</label><input class="form-input" id="newActName" required placeholder="e.g. Scuba Diving Experience"></div>
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="newActType">
+              <option value="sightseeing">Sightseeing</option>
+              <option value="adventure">Adventure</option>
+              <option value="food">Food</option>
+              <option value="relaxation">Relaxation</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Cost (INR)</label><input class="form-input" id="newActCost" type="number" value="25"></div>
+          <div class="form-group"><label class="form-label">Duration</label><input class="form-input" id="newActDuration" value="3h"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="newActDesc" rows="2"></textarea></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" id="cancelActBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
