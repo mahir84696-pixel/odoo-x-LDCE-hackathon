@@ -60,6 +60,12 @@ function tripStatus(start, end) {
   return 'upcoming';
 }
 
+function addDays(dateString, days) {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + days));
+  return date.toISOString().slice(0, 10);
+}
+
 exports.dashboard = (req, res) => {
   const trips = db.prepare('SELECT * FROM trips WHERE user_id = ?').all(req.user.id).map(hydrateTrip);
   const cityCount = db.prepare('SELECT COUNT(*) AS n FROM cities').get().n;
@@ -107,12 +113,54 @@ exports.create = (req, res) => {
     cover || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800',
     status,
     Number(budget || 0),
-    currency || 'USD',
+    currency || 'INR',
     slug
   );
   db.prepare('INSERT INTO expenses (trip_id) VALUES (?)').run(info.lastInsertRowid);
   const trip = hydrateTrip(db.prepare('SELECT * FROM trips WHERE id = ?').get(info.lastInsertRowid));
   res.status(201).json({ success: true, trip });
+};
+
+exports.autoPlan = (req, res) => {
+  const trip = db.prepare('SELECT * FROM trips WHERE id = ? AND user_id = ?').get(req.params.id, req.user.id);
+  const origin = db.prepare('SELECT * FROM cities WHERE id = ?').get(req.body?.originCityId);
+  const destination = db.prepare('SELECT * FROM cities WHERE id = ?').get(req.body?.destinationCityId);
+  if (!trip) return res.status(404).json({ success: false, message: 'Trip not found' });
+  if (!origin || !destination) return res.status(400).json({ success: false, message: 'Start and destination cities are required' });
+  if (origin.id === destination.id) return res.status(400).json({ success: false, message: 'Choose two different cities' });
+
+  const dayCount = trip.start_date && trip.end_date
+    ? Math.max(1, Math.ceil((new Date(`${trip.end_date}T00:00:00`) - new Date(`${trip.start_date}T00:00:00`)) / 86400000) + 1)
+    : 1;
+  const insertStop = db.prepare(`
+    INSERT INTO stops (trip_id, city_id, title, section_type, start_date, end_date, budget, notes, sort_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const insertActivity = db.prepare(`
+    INSERT INTO stop_activities (stop_id, activity_id, name, time, cost, type, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  const destinationActivities = db.prepare('SELECT * FROM activities WHERE city_id = ? ORDER BY id').all(destination.id);
+  const planTypes = dayCount === 1 ? ['other'] : ['travel', 'hotel', 'activity', 'food', 'other'];
+  const planWeights = dayCount === 1 ? [1] : [0.2, 0.3, 0.25, 0.15, 0.1];
+  const weightTotal = planWeights.slice(0, dayCount).reduce((sum, weight) => sum + weight, 0);
+  const createPlan = db.transaction(() => {
+    db.prepare('DELETE FROM stops WHERE trip_id = ?').run(trip.id);
+    for (let day = 0; day < dayCount; day += 1) {
+      const dateValue = trip.start_date ? addDays(trip.start_date, day) : null;
+      const city = day === 0 ? origin : destination;
+      const sectionType = planTypes[Math.min(day, planTypes.length - 1)];
+      const sectionBudget = Number(trip.budget || 0) * (planWeights[Math.min(day, planWeights.length - 1)] || 0) / weightTotal;
+      const title = day === 0 ? `Day 1 - Depart ${origin.name}` : day === dayCount - 1 ? `Day ${day + 1} - Explore ${destination.name}` : `Day ${day + 1} - ${destination.name}`;
+      const stopInfo = insertStop.run(trip.id, city.id, title, sectionType, dateValue, dateValue, sectionBudget, day === 0 ? `Travel from ${origin.name} to ${destination.name}.` : `Plan ${sectionType} in ${destination.name}.`, day);
+      const activity = destinationActivities[day - 1];
+      if (activity) {
+        insertActivity.run(stopInfo.lastInsertRowid, activity.id, activity.name, '10:00', activity.cost, activity.type, activity.description || 'Automatically added to your day plan.');
+      }
+    }
+  });
+  createPlan();
+  res.json({ success: true, trip: hydrateTrip(db.prepare('SELECT * FROM trips WHERE id = ?').get(trip.id)) });
 };
 
 exports.update = (req, res) => {
