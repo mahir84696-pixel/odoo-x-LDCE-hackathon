@@ -5,10 +5,12 @@ const { hydrateTrip } = require('./tripController');
 exports.get = (req, res) => {
   const trip = db.prepare('SELECT * FROM trips WHERE id = ? AND user_id = ?').get(req.params.tripId, req.user.id);
   if (!trip) return res.status(404).json({ success: false, message: 'Trip not found' });
-  const expenses = db.prepare('SELECT * FROM expenses WHERE trip_id = ?').get(trip.id) || {
+  const storedExpenses = db.prepare('SELECT * FROM expenses WHERE trip_id = ?').get(trip.id) || {
     transport: 0, stay: 0, activities: 0, food: 0, misc: 0
   };
-  res.json({ success: true, expenses, summary: calculateBudget(expenses, trip.budget), trip: hydrateTrip(trip) });
+  const hydratedTrip = hydrateTrip(trip);
+  const expenses = { ...storedExpenses, activities: hydratedTrip.expenses.activities };
+  res.json({ success: true, expenses, summary: calculateBudget(expenses, trip.budget), trip: hydratedTrip });
 };
 
 exports.update = (req, res) => {
@@ -32,6 +34,8 @@ exports.update = (req, res) => {
     Number(body.food || 0),
     Number(body.misc || 0)
   );
-  const expenses = db.prepare('SELECT * FROM expenses WHERE trip_id = ?').get(trip.id);
+  const storedExpenses = db.prepare('SELECT * FROM expenses WHERE trip_id = ?').get(trip.id);
+  const hydratedTrip = hydrateTrip(trip);
+  const expenses = { ...storedExpenses, activities: hydratedTrip.expenses.activities };
   res.json({ success: true, expenses, summary: calculateBudget(expenses, trip.budget) });
 };
