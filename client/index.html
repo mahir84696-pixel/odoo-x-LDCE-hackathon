@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlobeTrotter · Real-Data Travel Planner & Itinerary Builder</title>
+  <meta name="description" content="Plan realistic travel itineraries with section-by-section budgets, real activities, and community sharing.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .landing-hero {
+      position: relative;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 7rem 1.5rem 5rem;
+      background: #192521;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.42);
+      transform: scale(1.03);
+      animation: heroZoom 14s infinite alternate ease-in-out;
+    }
+    @keyframes heroZoom {
+      from { transform: scale(1.02); }
+      to { transform: scale(1.08); }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .landing-hero h1 {
+      color: #fff;
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      margin-bottom: 1.4rem;
+      line-height: 1.15;
+    }
+    .landing-hero p.lead {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      opacity: 0.94;
+      max-width: 680px;
+      margin: 0 auto 2.2rem;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    .hero-stats-banner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      max-width: 920px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+    }
+    .hero-stat-item {
+      text-align: center;
+    }
+    .hero-stat-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .hero-stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-title h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    
+    .feature-box {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 2.2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .feature-box:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.4rem;
+    }
+    
+    .photo-banner {
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      padding: 3rem;
+      color: #fff;
+      margin: 4rem 0;
+      box-shadow: var(--shadow-lg);
+    }
+    .photo-banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4);
+    }
+    .photo-banner-content {
+      position: relative;
+      z-index: 2;
+      max-width: 620px;
+    }
+    .photo-banner-content h3 {
+      color: #fff;
+      font-size: 2.3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .dest-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .dest-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .dest-img-wrap {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+    .dest-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+    .dest-card:hover .dest-img-wrap img {
+      transform: scale(1.06);
+    }
+    .dest-cost-tag {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(25, 37, 33, 0.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .dest-info {
+      padding: 1.4rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    footer {
+      background: #192521;
+      color: #D3DAD6;
+      padding: 4.5rem 0 2rem;
+      margin-top: 5rem;
+    }
+    footer a {
+      color: #A4B2AC;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3.5rem;
+    }
+    .footer-col h5 {
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-stats-banner { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-stats-banner { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .photo-banner { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed Navbar -->
+  <nav class="navbar" id="navbar"></nav>
+
+  <!-- Hero Section with New Vibrant Photography -->
+  <section class="landing-hero">
+    <img class="hero-bg" src="assets/images/hero_bg.jpg" alt="Tropical Coast Paradise">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>✨ The Real-Data Travel Architecture</span>
+      </div>
+      <h1>Plan trips with real numbers, not filler itineraries</h1>
+      <p class="lead">
+        Build modular sections, allocate real budgets per leg, assign verified activities from SQLite catalog, and share with a thriving community.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-lg btn-primary" href="signup.html">Start Planning Free</a>
+        <a class="btn btn-lg btn-secondary" href="city-search.html">Explore Catalog</a>
+        <a class="btn btn-lg btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.4)" href="shared.html">Community Trips</a>
+      </div>
+
+      <!-- Realtime Database KPIs -->
+      <div class="hero-stats-banner">
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" id="statCitiesVal">23+</div>
+          <div class="hero-stat-label">Global Cities</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" id="statActsVal">28+</div>
+          <div class="hero-stat-label">Verified Activities</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val">100%</div>
+          <div class="hero-stat-label">Sectional Budgets</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val">SQLite</div>
+          <div class="hero-stat-label">Relational Storage</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section style="padding: 5.5rem 0 2rem;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Designed for Real Travelers</h2>
+        <p>Traditional planners fill your calendar with generic AI text. GlobeTrotter structures every leg with dates, city stays, and real costs.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="feature-box">
+          <div class="feature-icon" style="background:var(--purple-soft);color:#5D3B9E">🗺️</div>
+          <h3 style="font-size:1.4rem;margin-bottom:0.6rem">Modular Section Builder</h3>
+          <p style="color:var(--muted);margin-bottom:1.2rem;flex:1">Group your trip by City Stays, Flight legs, Hotel blocks, or Activity days. Each section gets its own custom date range and target budget.</p>
+          <a href="create-trip.html" class="btn btn-sm btn-secondary" style="align-self:flex-start">Build Section &rarr;</a>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon" style="background:var(--amber-soft);color:#9B6300">📊</div>
+          <h3 style="font-size:1.4rem;margin-bottom:0.6rem">Live Budget Engine</h3>
+          <p style="color:var(--muted);margin-bottom:1.2rem;flex:1">Track transport, stay, activities, food, and misc expenses against your target. Visual gauges and pie charts update in real-time.</p>
+          <a href="dashboard.html" class="btn btn-sm btn-secondary" style="align-self:flex-start">View Budgeting &rarr;</a>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon" style="background:var(--blue-soft);color:#2B62A0">👥</div>
+          <h3 style="font-size:1.4rem;margin-bottom:0.6rem">Community & 1-Click Clone</h3>
+          <p style="color:var(--muted);margin-bottom:1.2rem;flex:1">Discover itineraries built by travelers worldwide. Love a route? Clone the entire trip into your account with one click.</p>
+          <a href="shared.html" class="btn btn-sm btn-secondary" style="align-self:flex-start">Browse Community &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Destinations Showcase with Photography -->
+  <section style="padding: 4rem 0;">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem">
+        <div>
+          <h2>Popular Curated Destinations</h2>
+          <p style="color:var(--muted)">Explore vetted cities with daily cost indices and handpicked activities.</p>
+        </div>
+        <a class="btn btn-primary" href="city-search.html">Explore All 23 Cities</a>
+      </div>
+
+      <div class="grid grid-4" id="homeCitiesGrid">
+        <!-- Destination Cards rendered dynamically from API -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Visual Photo Showcase Banner -->
+  <section class="container">
+    <div class="photo-banner">
+      <img src="assets/images/showcase_banner.jpg" alt="Travel Landscape">
+      <div class="photo-banner-content">
+        <div class="tag" style="background:rgba(255,255,255,0.2);color:#fff;margin-bottom:1rem">🌟 Hackathon Edition</div>
+        <h3>Ready to map your next adventure?</h3>
+        <p style="opacity:0.95;margin-bottom:1.6rem;font-size:1.05rem">
+          Create an empty trip in seconds, add sections, attach curated activities, and track every single dollar on the itinerary view.
+        </p>
+        <a class="btn btn-lg btn-accent" href="signup.html">Create Your First Trip Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+            <div class="logo-icon">✈</div>
+            <span class="logo-text" style="color:#fff;-webkit-text-fill-color:#fff">GlobeTrotter</span>
+          </div>
+          <p style="color:#95A39D;max-width:320px;font-size:0.92rem;margin-bottom:1.5rem">
+            The full-stack trip planner built with vanilla HTML/CSS/JS and SQLite relational storage for the hackathon.
+          </p>
+          <div style="font-size:0.85rem;color:#708078">
+            &copy; 2026 GlobeTrotter. All rights reserved.
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Planner</h5>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="create-trip.html">Create New Trip</a></li>
+            <li><a href="my-trips.html">My Trips</a></li>
+            <li><a href="calendar.html">Trip Calendar</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="city-search.html">City Catalog</a></li>
+            <li><a href="activity-search.html">Activity Catalog</a></li>
+            <li><a href="shared.html">Community Itineraries</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Account</h5>
+          <ul class="footer-links">
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="signup.html">Create Account</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+            <li><a href="admin.html">Admin Panel</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    (async function() {
+      await loadNavbar('index.html');
+      try {
+        // Fetch all cities to populate dynamic statistics and list popular cities
+        const res = await API.get('/cities?sort=popular');
+        const cities = res.cities || [];
+        
+        // Update total cities KPI counter dynamically
+        const statCities = document.getElementById('statCitiesVal');
+        if (statCities && cities.length) {
+          statCities.textContent = `${cities.length}+`;
+        }
+
+        // Fetch all activities count to populate dynamic activities KPI counter
+        try {
+          const actRes = await API.get('/activities');
+          const activities = actRes.activities || [];
+          const statActs = document.getElementById('statActsVal');
+          if (statActs && activities.length) {
+            statActs.textContent = `${activities.length}+`;
+          }
+        } catch (actErr) {
+          console.error('Failed to load activities stats:', actErr);
+        }
+
+        // Render popular cities list
+        const grid = document.getElementById('homeCitiesGrid');
+        if (grid && cities.length) {
+          const featured = cities.slice(0, 8);
+          grid.innerHTML = featured.map(c => `
+            <article class="dest-card">
+              <div class="dest-img-wrap">
+                <img src="${c.image}" alt="${UI.escape(c.name)}" loading="lazy">
+                <span class="dest-cost-tag">${UI.money(c.cost_index)}/day</span>
+              </div>
+              <div class="dest-info">
+                <h4 style="font-size:1.25rem">${UI.escape(c.name)}</h4>
+                <p style="color:var(--muted);font-size:0.88rem;margin-bottom:8px">${UI.escape(c.country)} · ${UI.escape(c.region || 'World')}</p>
+                <p style="color:var(--text);font-size:0.88rem;margin-bottom:1.2rem;flex:1">${UI.escape(c.description || '')}</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <a class="btn btn-sm btn-ghost" href="city-search.html?q=${encodeURIComponent(c.name)}">Details</a>
+                  <a class="btn btn-sm btn-primary" href="activity-search.html?city=${encodeURIComponent(c.name)}">Activities</a>
+                </div>
+              </div>
+            </article>
+          `).join('');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  </script>
+</body>
+</html>
