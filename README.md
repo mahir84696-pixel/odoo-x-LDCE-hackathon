@@ -1,3 +1,3 @@
-# Globetrotter
+# odoo-x-LDCE-hackathon
 
-Frontend and backend structure for the travel itinerary application.
+Globetrotter frontend and backend structure for the travel itinerary application.
