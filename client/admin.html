@@ -62,8 +62,16 @@
 
   <main class="page-content">
     <div class="container">
+      <div id="adminLoading" class="card" style="text-align:center;padding:2.5rem">Checking administrator access...</div>
+      <div id="adminError" class="card" style="display:none;text-align:center;padding:2.5rem">
+        <h3 id="adminErrorTitle">Admin panel unavailable</h3>
+        <p id="adminErrorMessage" class="kpi-label" style="margin:0.7rem 0 1.2rem">Please sign in with the administrator account.</p>
+        <a class="btn btn-primary" href="login.html">Go to admin sign in</a>
+      </div>
+      <div id="adminContent" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:10px">
         <div>
+        </div>
           <span class="tag adventure">Screen 12/13 · Admin Control</span>
           <h2 style="font-size:2.2rem;margin-top:4px">Admin Panel</h2>
         </div>
