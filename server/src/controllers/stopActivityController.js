@@ -1,0 +1,1 @@
+// Stop-activity assignment controller.
