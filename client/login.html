@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GlobeTrotter | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+  <main class="auth-shell">
+    <section class="auth-hero" aria-hidden="true">
+      <div class="hero-brand">
+        <div class="logo-mark">GT</div>
+        <div class="brand-name">GlobeTrotter</div>
+      </div>
+      <div class="hero-copy">
+        <span class="eyebrow">Personalized travel planning</span>
+        <h1>Design trips that feel like you.</h1>
+        <p>Plan multi-city itineraries, stay on budget, and share the journey — from the first stop to the last sunset.</p>
+        <div class="hero-stats">
+          <div><strong>Cities</strong><span>Discover destinations</span></div>
+          <div><strong>Budget</strong><span>Live cost insights</span></div>
+          <div><strong>Share</strong><span>Public itineraries</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <div class="form-brand">
+          <div class="logo-mark">GT</div>
+          <div>
+            <div class="brand-name">GlobeTrotter</div>
+            <small>Welcome back</small>
+          </div>
+        </div>
+        <h2>Log in to your account</h2>
+        <p class="lead">Access your trips, itineraries, and budget plans.</p>
+        <div id="authToast" class="toast" role="status"></div>
+
+        <form id="loginForm" class="auth-form" novalidate>
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <span id="loginEmailError" class="error-text">Enter a valid email address.</span>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <div class="password-wrap">
+              <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="At least 6 characters" required>
+              <button class="toggle-password" type="button" data-target="loginPassword">Show</button>
+            </div>
+            <span id="loginPasswordError" class="error-text">Password must be at least 6 characters.</span>
+          </div>
+          <div class="row-between">
+            <label class="checkbox"><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+        <p class="switch-auth">New to GlobeTrotter? <a href="signup.html">Create an account</a></p>
+      </div>
+    </section>
+  </main>
+
+  <div id="forgotModal" class="modal-backdrop" role="dialog" aria-labelledby="forgotTitle" aria-modal="true">
+    <div class="modal">
+      <h3 id="forgotTitle">Reset your password</h3>
+      <p>Enter the email on your account. If it exists in our database, we will save a reset request.</p>
+      <form id="forgotForm" class="auth-form">
+        <div class="field">
+          <label for="forgotEmail">Email</label>
+          <input id="forgotEmail" type="email" required placeholder="you@example.com">
+        </div>
+        <button class="btn btn-primary" type="submit">Send reset link</button>
+        <button class="btn btn-ghost" type="button" id="closeForgot">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

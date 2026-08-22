@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GlobeTrotter | Sign up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+  <main class="auth-shell">
+    <section class="auth-hero" aria-hidden="true">
+      <div class="hero-brand">
+        <div class="logo-mark">GT</div>
+        <div class="brand-name">GlobeTrotter</div>
+      </div>
+      <div class="hero-copy">
+        <span class="eyebrow">Create your traveler profile</span>
+        <h1>Start planning your next journey.</h1>
+        <p>Save your details once, then build multi-city itineraries with activities, calendars, and budget tracking.</p>
+        <div class="hero-stats">
+          <div><strong>Profile</strong><span>Stored in SQLite</span></div>
+          <div><strong>Trips</strong><span>Yours alone until shared</span></div>
+          <div><strong>Secure</strong><span>Hashed passwords</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <div class="form-brand">
+          <div class="logo-mark">GT</div>
+          <div>
+            <div class="brand-name">GlobeTrotter</div>
+            <small>Join the community</small>
+          </div>
+        </div>
+        <h2>Register a new account</h2>
+        <p class="lead">Tell us who you are so we can personalize your travel plans.</p>
+        <div id="authToast" class="toast" role="status"></div>
+
+        <form id="signupForm" class="auth-form" novalidate>
+          <div class="photo-upload">
+            <input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+            <button id="photoUploadBtn" class="photo-picker" type="button" aria-label="Upload profile photo">
+              <img id="photoPreview" alt="Profile preview">
+              <span class="photo-placeholder">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 15a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M4.5 19.2c1.4-2.4 3.9-4 7.5-4s6.1 1.6 7.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <rect x="3.5" y="4.5" width="17" height="15" rx="3.5" stroke="currentColor" stroke-width="1.6"/>
+                </svg>
+              </span>
+            </button>
+            <div>
+              <strong>Profile photo</strong>
+              <p>Optional. JPG, PNG, or WEBP up to 2 MB.</p>
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="firstName">First name</label>
+              <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="Aarav" required>
+              <span id="firstNameError" class="error-text">First name is required.</span>
+            </div>
+            <div class="field">
+              <label for="lastName">Last name</label>
+              <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Shah" required>
+              <span id="lastNameError" class="error-text">Last name is required.</span>
+            </div>
+            <div class="field">
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+              <span id="emailError" class="error-text">Enter a valid email address.</span>
+            </div>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required>
+              <span id="phoneError" class="error-text">Phone number is required.</span>
+            </div>
+            <div class="field">
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" autocomplete="address-level2" placeholder="Ahmedabad" required>
+              <span id="cityError" class="error-text">City is required.</span>
+            </div>
+            <div class="field">
+              <label for="country">Country</label>
+              <input id="country" name="country" type="text" autocomplete="country-name" placeholder="India" required>
+              <span id="countryError" class="error-text">Country is required.</span>
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="password-wrap">
+                <input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 6 characters" required>
+                <button class="toggle-password" type="button" data-target="password">Show</button>
+              </div>
+              <span id="passwordError" class="error-text">Password must be at least 6 characters.</span>
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Confirm password</label>
+              <div class="password-wrap">
+                <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeat password" required>
+                <button class="toggle-password" type="button" data-target="confirmPassword">Show</button>
+              </div>
+              <span id="confirmPasswordError" class="error-text">Passwords do not match.</span>
+            </div>
+            <div class="field full">
+              <label for="additionalInfo">Additional information</label>
+              <textarea id="additionalInfo" name="additionalInfo" placeholder="Travel style, dietary notes, or anything we should know..."></textarea>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Register user</button>
+        </form>
+        <p class="switch-auth">Already have an account? <a href="login.html">Log in</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
