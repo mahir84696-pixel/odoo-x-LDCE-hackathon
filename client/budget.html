@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget · GlobeTrotter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/budget.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+  <main class="page-content">
+    <div class="container">
+      <h2 id="tripName">Budget</h2>
+      <div class="kpi-row" id="budgetStats"></div>
+      <div class="grid grid-2">
+        <div class="card chart-card"><h4>Breakdown</h4><div id="breakdownChart"></div><div id="dayWarnings"></div></div>
+        <div class="card">
+          <h4>Enter expenses</h4>
+          <form id="expenseForm">
+            <div class="form-group"><label class="form-label">Transport</label><input class="form-input" id="expTransport" type="number"></div>
+            <div class="form-group"><label class="form-label">Stay</label><input class="form-input" id="expStay" type="number"></div>
+            <div class="form-group"><label class="form-label">Activities</label><input class="form-input" id="expActivities" type="number"></div>
+            <div class="form-group"><label class="form-label">Food</label><input class="form-input" id="expFood" type="number"></div>
+            <div class="form-group"><label class="form-label">Misc</label><input class="form-input" id="expMisc" type="number"></div>
+            <button class="btn btn-primary" style="width:100%">Save budget</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/budget.js"></script>
+</body>
+</html>
