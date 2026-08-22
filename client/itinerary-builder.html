@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Itinerary · GlobeTrotter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/itinerary.css">
+  <style>
+    .builder-header {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 1.6rem 2rem;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+    .section-wireframe-card {
+      background: #fff;
+      border: 2px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      margin-bottom: 1.6rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .section-num-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+    .section-desc-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .wireframe-meta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.4rem;
+    }
+    .wireframe-meta-cell {
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      background: var(--bg);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.95rem;
+    }
+    .add-section-big-btn {
+      width: 100%;
+      padding: 16px 24px;
+      font-size: 1.1rem;
+      border: 2px dashed var(--primary);
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border-radius: var(--radius);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      margin-top: 1rem;
+    }
+    .add-section-big-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 680px) {
+      .wireframe-meta-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <main class="page-content">
+    <div class="container">
+      <!-- Top Trip Header -->
+      <div class="builder-header">
+        <div>
+          <span class="tag upcoming" style="margin-bottom:6px">Screen 5 · Itinerary Builder</span>
+          <h2 id="tripTitle" style="font-size:2rem;margin-top:4px">Build Itinerary</h2>
+          <p class="kpi-label" id="tripDates" style="margin-top:4px;font-size:0.95rem"></p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn-secondary" id="budgetLink" href="#">Budget Breakdown</a>
+          <a class="btn btn-primary" id="previewLink" href="#">View Flowchart Preview</a>
+        </div>
+      </div>
+
+      <div class="builder-layout">
+        <!-- Trip Global Settings Sidebar -->
+        <aside class="card" style="height:fit-content;position:sticky;top:96px">
+          <h3 style="font-size:1.3rem;margin-bottom:1rem">Trip Settings</h3>
+          <div class="form-group">
+            <label class="form-label">Trip Name</label>
+            <input class="form-input" id="editName" placeholder="e.g. Summer in Tokyo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Overall Trip Budget (INR)</label>
+            <input class="form-input" id="editBudget" type="number" min="0" step="10">
+          </div>
+          <button class="btn btn-primary" id="saveDetails" style="width:100%">Save Trip Details</button>
+
+          <hr style="border:0;border-top:1px solid var(--line);margin:1.5rem 0">
+
+          <h4 style="font-size:1.1rem;margin-bottom:0.6rem">Quick Section Creator</h4>
+          <p class="kpi-label" style="margin-bottom:1rem;font-size:0.85rem">Add a travel, hotel, or city section with custom budget and dates.</p>
+          
+          <div class="form-group">
+            <label class="form-label">Section Type</label>
+            <select class="form-select" id="sectionType">
+              <option value="activity">◎ Activity</option>
+              <option value="hotel">🏨 Hotel</option>
+              <option value="food">🍴 Food</option>
+              <option value="travel">✈ Travel</option>
+              <option value="other">＋ Other Expense</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Title</label>
+            <input class="form-input" id="sectionTitle" placeholder="e.g. Flight to Bali / Ubud Stay">
+          </div>
+          <div class="form-group">
+            <label class="form-label">City Destination</label>
+            <select class="form-select" id="stopCity"></select>
+          </div>
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">From Date</label>
+              <input class="form-input" id="stopStart" type="date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">To Date</label>
+              <input class="form-input" id="stopEnd" type="date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Budget (INR)</label>
+            <input class="form-input" id="sectionBudget" type="number" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Notes / Details</label>
+            <textarea class="form-textarea" id="sectionNotes" rows="2" placeholder="All necessary information about this section (hotel, transport notes, etc.)"></textarea>
+          </div>
+          <button class="btn btn-primary" id="addSection" style="width:100%">+ Add This Section</button>
+        </aside>
+
+        <!-- Dynamic Wireframe Section Cards Container -->
+        <div>
+          <div id="stopsContainer"></div>
+          
+          <!-- Big "+ Add another Section" Button matching wireframe -->
+          <button class="add-section-big-btn" id="bigAddSectionBtn" type="button">
+            <span style="font-size:1.4rem">+</span> Add another Section
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/itineraryBuilder.js"></script>
+</body>
+</html>
