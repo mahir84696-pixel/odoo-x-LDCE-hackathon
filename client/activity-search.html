@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activities · GlobeTrotter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+  <main class="page-content">
+    <div class="container">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap">
+        <a class="btn btn-secondary" id="backToTrip" href="my-trips.html" aria-label="Back to itinerary">← Back</a>
+        <h2 style="margin:0">Find activities</h2>
+      </div>
+      <div class="toolbar">
+        <input class="toolbar-search" id="searchInput" type="search" placeholder="Search activities…">
+        <select class="form-select" id="typeFilter" style="width:160px">
+          <option value="">All types</option>
+          <option value="sightseeing">Sightseeing</option>
+          <option value="adventure">Adventure</option>
+          <option value="food">Food</option>
+          <option value="relaxation">Relaxation</option>
+        </select>
+        <select class="form-select" id="tripSelect" style="width:200px"></select>
+        <button type="button" class="btn btn-chip" data-tool="group">Group by</button>
+        <button type="button" class="btn btn-chip" data-tool="filter">Filter</button>
+        <button type="button" class="btn btn-chip" data-tool="sort">Sort by</button>
+      </div>
+      <div class="grid grid-3" id="activitiesList"></div>
+    </div>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/activitySearch.js"></script>
+</body>
+</html>
