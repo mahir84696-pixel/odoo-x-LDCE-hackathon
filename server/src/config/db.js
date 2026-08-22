@@ -69,7 +69,7 @@ db.exec(`
     cover TEXT,
     status TEXT DEFAULT 'upcoming',
     budget REAL DEFAULT 0,
-    currency TEXT DEFAULT 'USD',
+    currency TEXT DEFAULT 'INR',
     share_slug TEXT UNIQUE,
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -113,6 +113,8 @@ db.exec(`
     FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
   );
 `);
+
+db.prepare("UPDATE trips SET currency = 'INR' WHERE currency IS NULL OR currency = 'USD'").run();
 
 db.databasePath = dbPath;
 module.exports = db;
