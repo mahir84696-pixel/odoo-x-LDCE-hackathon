@@ -1,1 +1,0 @@
-// Itinerary view screen logic.
